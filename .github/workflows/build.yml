@@ -16,22 +16,23 @@ jobs:
         run: |
           xcodebuild -version
 
-      - name: Check project files
+      - name: Check project
         run: |
           set -e
 
-          echo "=== 当前目录 ==="
+          echo "=== Current directory ==="
           pwd
 
-          echo "=== 项目文件 ==="
-          find . -maxdepth 4 \
-            \( -name "*.xcodeproj" -o -name "*.swift" -o -name "Info.plist" \) \
-            -print
+          echo "=== Project ==="
+          ls -la
 
-          echo "=== project.pbxproj ==="
+          echo "=== Xcode project ==="
+          ls -la iOSCacheCleaner.xcodeproj
+
+          echo "=== Project file ==="
           ls -lh iOSCacheCleaner.xcodeproj/project.pbxproj
 
-      - name: Validate Xcode project
+      - name: Validate project
         run: |
           set -e
 
@@ -48,38 +49,38 @@ jobs:
           set -e
 
           rm -rf build
+          mkdir -p build
 
           xcodebuild \
             -project iOSCacheCleaner.xcodeproj \
             -target iOSCacheCleaner \
             -configuration Release \
             -sdk iphoneos \
-            -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="" \
-            build
+            CONFIGURATION_BUILD_DIR="$PWD/build"
 
       - name: Find built app
         run: |
           set -e
 
-          echo "=== 搜索 APP ==="
+          echo "=== Searching for app ==="
 
-          APP=$(find build \
+          APP=$(find "$PWD/build" \
             -type d \
             -name "iOSCacheCleaner.app" \
             | head -n 1)
 
           if [ -z "$APP" ]; then
-            echo "❌ 没有找到 iOSCacheCleaner.app"
-            echo "=== Build 目录 ==="
-            find build -maxdepth 7 -print
+            echo "❌ iOSCacheCleaner.app not found"
+            echo "=== Build directory ==="
+            find "$PWD/build" -maxdepth 6 -print
             exit 1
           fi
 
-          echo "✅ 找到:"
+          echo "✅ Found:"
           echo "$APP"
 
           rm -rf Payload
