@@ -92,13 +92,22 @@ jobs:
         run: |
           set -e
 
-          rm -f iOSCacheCleaner-unsigned.ipa
+          rm -rf IPA
+          mkdir -p IPA/Payload
 
-          cd Payload
+          cp -R build/iOSCacheCleaner.app IPA/Payload/
 
-          zip -r ../iOSCacheCleaner-unsigned.ipa iOSCacheCleaner.app
+          cd IPA
+
+          echo "=== IPA structure ==="
+          find . -maxdepth 3 -print
+
+          zip -r -9 ../iOSCacheCleaner-unsigned.ipa Payload
 
           cd ..
+
+          echo "=== Verify IPA ==="
+          unzip -l iOSCacheCleaner-unsigned.ipa
 
           echo "=== IPA ==="
           ls -lh iOSCacheCleaner-unsigned.ipa
