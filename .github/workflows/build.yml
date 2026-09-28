@@ -67,7 +67,7 @@ jobs:
 
           echo "=== 搜索 APP ==="
 
-          APP=$(find build/DerivedData/Build/Products \
+          APP=$(find build \
             -type d \
             -name "iOSCacheCleaner.app" \
             | head -n 1)
