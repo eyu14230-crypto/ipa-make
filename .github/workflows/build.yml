@@ -5,84 +5,87 @@ on:
 
 jobs:
   build:
+    name: Build iOSCacheCleaner
     runs-on: macos-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v5
 
       - name: Show Xcode version
         run: |
           xcodebuild -version
 
-      - name: Find Xcode project
+      - name: Check project files
         run: |
-          find . -maxdepth 3 \
-            \( -name "*.xcodeproj" -o -name "*.xcworkspace" \) \
+          set -e
+
+          echo "=== 当前目录 ==="
+          pwd
+
+          echo "=== 项目文件 ==="
+          find . -maxdepth 4 \
+            \( -name "*.xcodeproj" -o -name "*.swift" -o -name "Info.plist" \) \
             -print
+
+          echo "=== project.pbxproj ==="
+          ls -lh iOSCacheCleaner.xcodeproj/project.pbxproj
+
+      - name: Validate Xcode project
+        run: |
+          set -e
+
+          xcodebuild \
+            -project iOSCacheCleaner.xcodeproj \
+            -target iOSCacheCleaner \
+            -showBuildSettings \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
 
       - name: Build unsigned app
         run: |
           set -e
 
-          PROJECT=$(find . -maxdepth 3 -name "*.xcodeproj" | head -n 1)
-
-          if [ -z "$PROJECT" ]; then
-            echo "没有找到 .xcodeproj"
-            exit 1
-          fi
-
-          SCHEME=$(xcodebuild -list \
-            -project "$PROJECT" |
-            sed -n '/Schemes:/,/^$/p' |
-            tail -n +2 |
-            sed '/^[[:space:]]*$/d' |
-            head -n 1 |
-            xargs)
-
-          if [ -z "$SCHEME" ]; then
-            echo "没有找到 Scheme"
-            exit 1
-          fi
-
-          echo "Project: $PROJECT"
-          echo "Scheme: $SCHEME"
-
-          mkdir -p build
+          rm -rf build
 
           xcodebuild \
-            -project "$PROJECT" \
-            -scheme "$SCHEME" \
+            -project iOSCacheCleaner.xcodeproj \
+            -target iOSCacheCleaner \
             -configuration Release \
             -sdk iphoneos \
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
             build
 
-      - name: Locate app
+      - name: Find built app
         run: |
           set -e
 
+          echo "=== 搜索 APP ==="
+
           APP=$(find build/DerivedData/Build/Products \
             -type d \
-            -name "*.app" |
-            head -n 1)
+            -name "iOSCacheCleaner.app" \
+            | head -n 1)
 
           if [ -z "$APP" ]; then
-            echo "没有找到 .app"
-            find build -maxdepth 6 -print
+            echo "❌ 没有找到 iOSCacheCleaner.app"
+            echo "=== Build 目录 ==="
+            find build -maxdepth 7 -print
             exit 1
           fi
 
-          echo "找到 App:"
+          echo "✅ 找到:"
           echo "$APP"
 
           rm -rf Payload
           mkdir -p Payload
 
-          cp -R "$APP" Payload/
+          cp -R "$APP" Payload/iOSCacheCleaner.app
 
       - name: Create unsigned IPA
         run: |
@@ -92,11 +95,11 @@ jobs:
 
           cd Payload
 
-          zip -r ../iOSCacheCleaner-unsigned.ipa *.app
+          zip -r ../iOSCacheCleaner-unsigned.ipa iOSCacheCleaner.app
 
           cd ..
 
-          echo "IPA 已生成:"
+          echo "=== IPA ==="
           ls -lh iOSCacheCleaner-unsigned.ipa
 
       - name: Upload unsigned IPA
