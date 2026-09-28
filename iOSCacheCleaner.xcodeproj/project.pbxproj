@@ -6,7 +6,10 @@
 
 	objects = {
 
-		/* Project */
+		/* =========================
+		   Project
+		   ========================= */
+
 		000000000000000000000001 = {
 			isa = PBXProject;
 			attributes = {
@@ -34,8 +37,27 @@
 			);
 		};
 
-		/* Main Group */
+
+		/* =========================
+		   Main Group
+		   ========================= */
+
 		000000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000005,
+				000000000000000000000004,
+				000000000000000000000003,
+			);
+			sourceTree = "<group>";
+		};
+
+
+		/* =========================
+		   iOSCacheCleaner Group
+		   ========================= */
+
+		000000000000000000000005 = {
 			isa = PBXGroup;
 			children = (
 				000000000000000000000020,
@@ -43,12 +65,17 @@
 				000000000000000000000022,
 				000000000000000000000023,
 				000000000000000000000024,
-				000000000000000000000003,
 			);
+			name = iOSCacheCleaner;
+			path = iOSCacheCleaner;
 			sourceTree = "<group>";
 		};
 
-		/* Products */
+
+		/* =========================
+		   Products
+		   ========================= */
+
 		000000000000000000000003 = {
 			isa = PBXGroup;
 			children = (
@@ -58,7 +85,25 @@
 			sourceTree = "<group>";
 		};
 
-		/* Swift files */
+
+		/* =========================
+		   Frameworks
+		   ========================= */
+
+		000000000000000000000004 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000040,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+
+
+		/* =========================
+		   Swift Source Files
+		   ========================= */
+
 		000000000000000000000020 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.swift;
@@ -80,7 +125,11 @@
 			sourceTree = "<group>";
 		};
 
-		/* Shell script */
+
+		/* =========================
+		   Shell Script
+		   ========================= */
+
 		000000000000000000000023 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text;
@@ -88,7 +137,11 @@
 			sourceTree = "<group>";
 		};
 
-		/* Info.plist */
+
+		/* =========================
+		   Info.plist
+		   ========================= */
+
 		000000000000000000000024 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.xml;
@@ -96,7 +149,11 @@
 			sourceTree = "<group>";
 		};
 
-		/* App product */
+
+		/* =========================
+		   App Product
+		   ========================= */
+
 		000000000000000000000030 = {
 			isa = PBXFileReference;
 			explicitFileType = wrapper.application;
@@ -105,7 +162,11 @@
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 
-		/* UIKit */
+
+		/* =========================
+		   UIKit
+		   ========================= */
+
 		000000000000000000000040 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -114,17 +175,11 @@
 			sourceTree = SDKROOT;
 		};
 
-		/* Frameworks Group */
-		000000000000000000000004 = {
-			isa = PBXGroup;
-			children = (
-				000000000000000000000040,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 
-		/* Build Files */
+		/* =========================
+		   Build Files
+		   ========================= */
+
 		000000000000000000000050 = {
 			isa = PBXBuildFile;
 			fileRef = 000000000000000000000020;
@@ -145,7 +200,16 @@
 			fileRef = 000000000000000000000040;
 		};
 
-		/* Sources */
+		000000000000000000000054 = {
+			isa = PBXBuildFile;
+			fileRef = 000000000000000000000023;
+		};
+
+
+		/* =========================
+		   Sources
+		   ========================= */
+
 		000000000000000000000060 = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -157,7 +221,11 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 
-		/* Frameworks */
+
+		/* =========================
+		   Frameworks
+		   ========================= */
+
 		000000000000000000000061 = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -167,16 +235,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 
-		/* Resources */
+
+		/* =========================
+		   Resources
+		   ========================= */
+
 		000000000000000000000062 = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				000000000000000000000054,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 
-		/* Target */
+
+		/* =========================
+		   Target
+		   ========================= */
+
 		000000000000000000000010 = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 000000000000000000000101;
@@ -195,7 +272,11 @@
 			productType = "com.apple.product-type.application";
 		};
 
-		/* Project Build Configurations */
+
+		/* =========================
+		   Project Build Configurations
+		   ========================= */
+
 		000000000000000000000070 = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -222,7 +303,11 @@
 			name = Release;
 		};
 
-		/* Target Build Configurations */
+
+		/* =========================
+		   Target Build Configurations
+		   ========================= */
+
 		000000000000000000000080 = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -258,7 +343,11 @@
 			name = Release;
 		};
 
-		/* Configuration Lists */
+
+		/* =========================
+		   Configuration Lists
+		   ========================= */
+
 		000000000000000000000100 = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
