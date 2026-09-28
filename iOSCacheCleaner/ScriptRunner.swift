@@ -1,66 +1,82 @@
-
 import Foundation
-import Darwin
 
-enum ScriptRunner {
-    static func run(script: String) -> String {
-        let shellCandidates = ["/bin/sh", "/bin/bash"]
-        let shell = shellCandidates.first { FileManager.default.isExecutableFile(atPath: $0) }
+final class ScriptRunner {
 
-        guard let shell else {
-            return "失败：设备环境没有可用的 /bin/sh 或 /bin/bash。\n"
-        }
-
-        var outPipe: Int32 = -1
-        var errPipe: Int32 = -1
-        var outFD = [Int32](repeating: -1, count: 2)
-        var errFD = [Int32](repeating: -1, count: 2)
-
-        guard pipe(&outFD) == 0, pipe(&errFD) == 0 else {
-            return "失败：无法创建输出管道。\n"
-        }
-
-        var argv: [UnsafeMutablePointer<CChar>?] = []
-        argv.append(strdup(shell))
-        argv.append(strdup(script))
-        argv.append(nil)
-
-        var pid: pid_t = 0
-        let rc = argv.withUnsafeMutableBufferPointer { buffer in
-            posix_spawn(&pid, shell, nil, nil, buffer.baseAddress, environ)
-        }
-
-        for p in argv where p != nil { free(p) }
-
-        if rc != 0 {
-            close(outFD[0]); close(outFD[1])
-            close(errFD[0]); close(errFD[1])
-            return "执行失败，posix_spawn 错误码：\(rc)\n"
-        }
-
-        close(outFD[1])
-        close(errFD[1])
-
-        let stdoutData = FileHandle(fileDescriptor: outFD[0], closeOnDealloc: true).readDataToEndOfFile()
-        let stderrData = FileHandle(fileDescriptor: errFD[0], closeOnDealloc: true).readDataToEndOfFile()
-
-        var status: Int32 = 0
-        waitpid(pid, &status, 0)
-
-        let stdoutText = String(data: stdoutData, encoding: .utf8) ?? ""
-        let stderrText = String(data: stderrData, encoding: .utf8) ?? ""
-
-        var result = stdoutText
-        if !stderrText.isEmpty {
-            result += "\n[stderr]\n" + stderrText
-        }
-
-        if WIFEXITED(status) {
-            result += "\n\n退出码：\(WEXITSTATUS(status))"
-        } else {
-            result += "\n\n进程未正常退出。"
-        }
-
-        return result
+static let shared = ScriptRunner()
+private init() {}
+func runScript(
+    named scriptName: String,
+    completion: @escaping (String) -> Void
+) {
+    guard let scriptURL = Bundle.main.url(
+        forResource: scriptName,
+        withExtension: nil
+    ) else {
+        completion("错误：hook失败 \(scriptName)")
+        return
     }
+    do {
+        let scriptContent = try String(contentsOf: scriptURL, encoding: .utf8)
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let tempScriptURL = tempDirectory.appendingPathComponent(scriptName)
+        try scriptContent.write(
+            to: tempScriptURL,
+            atomically: true,
+            encoding: .utf8
+        )
+        try FileManager.default.setAttributes(
+            [.posixPermissions: 0o755],
+            ofItemAtPath: tempScriptURL.path
+        )
+        var output = ""
+        var errorOutput = ""
+        let outputPipe = Pipe()
+        let errorPipe = Pipe()
+        let process = Process()
+        #if os(iOS)
+        process.executableURL = URL(fileURLWithPath: "/bin/sh")
+        #else
+        process.executableURL = URL(fileURLWithPath: "/bin/sh")
+        #endif
+        process.arguments = [tempScriptURL.path]
+        process.standardOutput = outputPipe
+        process.standardError = errorPipe
+        do {
+            try process.run()
+            process.waitUntilExit()
+        } catch {
+            completion("执行失败：\(error.localizedDescription)")
+            return
+        }
+        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+        let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+        if let text = String(data: outputData, encoding: .utf8) {
+            output = text
+        }
+        if let text = String(data: errorData, encoding: .utf8) {
+            errorOutput = text
+        }
+        var result = ""
+        if !output.isEmpty {
+            result += output
+        }
+        if !errorOutput.isEmpty {
+            result += "\n\n错误输出：\n\(errorOutput)"
+        }
+        result += "\n\n进程状态：\(process.terminationStatus)"
+        if process.terminationReason == .exit {
+            result += "\n终止原因：正常退出"
+        } else {
+            result += "\n终止原因：被信号终止"
+        }
+        if result.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            result = "恭喜你获得了一块板砖。\n退出码：\(process.terminationStatus)"
+        }
+        completion(result)
+        try? FileManager.default.removeItem(at: tempScriptURL)
+    } catch {
+        completion("错误：\(error.localizedDescription)")
+    }
+}
+
 }
