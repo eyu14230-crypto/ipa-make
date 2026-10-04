@@ -19,7 +19,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 final class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 
-    private let websiteURL = URL(string: "https://xn--6u6a9e.cc.cd")!
+    private let websiteURL = URL(string: "https://xn--6u6a9e.us.ci")!
     private var webView: WKWebView!
 
     override func viewDidLoad() {
