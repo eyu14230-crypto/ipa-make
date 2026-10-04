@@ -1,0 +1,56 @@
+name: Build 宁的博客 IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build unsigned archive
+        run: |
+          set -e
+
+          xcodebuild \
+            -project NingBlogApp.xcodeproj \
+            -scheme NingBlogApp \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath "$RUNNER_TEMP/NingBlogApp.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            archive
+
+      - name: Package unsigned IPA
+        run: |
+          set -e
+
+          APP_PATH="$RUNNER_TEMP/NingBlogApp.xcarchive/Products/Applications/NingBlogApp.app"
+
+          if [ ! -d "$APP_PATH" ]; then
+            echo "ERROR: NingBlogApp.app was not produced."
+            find "$RUNNER_TEMP/NingBlogApp.xcarchive" -maxdepth 5 -print
+            exit 1
+          fi
+
+          mkdir -p "$RUNNER_TEMP/Payload"
+          cp -R "$APP_PATH" "$RUNNER_TEMP/Payload/NingBlogApp.app"
+
+          cd "$RUNNER_TEMP"
+          zip -qry "宁的博客-未签名.ipa" Payload
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NingBlogApp-unsigned-IPA
+          path: ${{ runner.temp }}/宁的博客-未签名.ipa
+          if-no-files-found: error
+          retention-days: 7
