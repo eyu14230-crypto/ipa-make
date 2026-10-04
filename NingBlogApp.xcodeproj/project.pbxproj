@@ -19,6 +19,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F10000000000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -30,6 +37,7 @@
 			);
 			sourceTree = "<group>";
 		};
+
 		C10000000000000000000001 /* NingBlogApp */ = {
 			isa = PBXGroup;
 			children = (
@@ -40,6 +48,7 @@
 			path = NingBlogApp;
 			sourceTree = "<group>";
 		};
+
 		C10000000000000000000002 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -81,19 +90,25 @@
 					};
 				};
 			};
+
 			buildConfigurationList = E10000000000000000000002 /* Build configuration list for PBXProject "NingBlogApp" */;
+
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
+
 			knownRegions = (
 				en,
 				Base,
 				zh-Hans,
 			);
+
 			mainGroup = C10000000000000000000000;
 			productRefGroup = C10000000000000000000002 /* Products */;
+
 			projectDirPath = "";
 			projectRoot = "";
+
 			targets = (
 				D10000000000000000000001 /* NingBlogApp */,
 			);
@@ -122,105 +137,154 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXFrameworksBuildPhase section */
-		F10000000000000000000003 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
 /* Begin XCBuildConfiguration section */
+
 		H10000000000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Manual;
+
 				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 1.0;
+
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NingBlogApp/Info.plist;
+
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cc.ningnb.ningblog;
+
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+
+				PRODUCT_BUNDLE_IDENTIFIER = "cc.ningnb.ningblog";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = NingBlogApp;
+
 				SWIFT_VERSION = 5.0;
+
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
+
 		H10000000000000000000002 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Manual;
+
 				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 1.0;
+
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NingBlogApp/Info.plist;
+
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cc.ningnb.ningblog;
+
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+
+				PRODUCT_BUNDLE_IDENTIFIER = "cc.ningnb.ningblog";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = NingBlogApp;
+
 				SWIFT_VERSION = 5.0;
+
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
+
 		H10000000000000000000003 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+
 				CLANG_ENABLE_MODULES = YES;
+
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN_UNUSED_FUNCTION = YES;
 				CLANG_WARN_UNUSED_VARIABLE = YES;
+
 				GCC_C_LANGUAGE_STANDARD = gnu17;
+
 				SDKROOT = iphoneos;
+
+				PRODUCT_BUNDLE_IDENTIFIER = "cc.ningnb.ningblog";
 			};
 			name = Debug;
 		};
+
 		H10000000000000000000004 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+
 				CLANG_ENABLE_MODULES = YES;
+
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN_UNUSED_FUNCTION = YES;
 				CLANG_WARN_UNUSED_VARIABLE = YES;
+
 				GCC_C_LANGUAGE_STANDARD = gnu17;
+
 				SDKROOT = iphoneos;
+
+				PRODUCT_BUNDLE_IDENTIFIER = "cc.ningnb.ningblog";
 			};
 			name = Release;
 		};
+
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+
 		E10000000000000000000001 /* Build configuration list for PBXNativeTarget "NingBlogApp" */ = {
 			isa = XCConfigurationList;
+
 			buildConfigurations = (
 				H10000000000000000000001 /* Debug */,
 				H10000000000000000000002 /* Release */,
 			);
+
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+
 		E10000000000000000000002 /* Build configuration list for PBXProject "NingBlogApp" */ = {
 			isa = XCConfigurationList;
+
 			buildConfigurations = (
 				H10000000000000000000003 /* Debug */,
 				H10000000000000000000004 /* Release */,
 			);
+
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+
 /* End XCConfigurationList section */
+
 	};
+
+/* Begin rootObject */
 	rootObject = G10000000000000000000001 /* Project object */;
 }
