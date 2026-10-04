@@ -11,10 +11,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check project
+        run: |
+          echo "检查项目文件..."
+          ls -la
+          echo "检查 Xcode 项目..."
+          ls -la NingBlogApp.xcodeproj
+          echo "检查 App 源文件..."
+          ls -la NingBlogApp
+
+      - name: Check Bundle Identifier
+        run: |
+          echo "检查 Bundle Identifier..."
+          grep -R "PRODUCT_BUNDLE_IDENTIFIER" NingBlogApp.xcodeproj/project.pbxproj || true
+
       - name: Show Xcode version
         run: xcodebuild -version
 
-      - name: Build unsigned archive
+      - name: Clean
+        run: |
+          xcodebuild \
+            -project NingBlogApp.xcodeproj \
+            -scheme NingBlogApp \
+            -configuration Release \
+            -sdk iphoneos \
+            clean \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Archive
         run: |
           set -e
 
@@ -24,30 +49,53 @@ jobs:
             -configuration Release \
             -sdk iphoneos \
             -archivePath "$RUNNER_TEMP/NingBlogApp.xcarchive" \
+            PRODUCT_BUNDLE_IDENTIFIER=cc.ningnb.ningblog \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             archive
 
-      - name: Package unsigned IPA
+      - name: Check Archive
+        run: |
+          echo "检查 Archive..."
+          find "$RUNNER_TEMP/NingBlogApp.xcarchive" -maxdepth 5 -print
+
+          APP_PATH="$RUNNER_TEMP/NingBlogApp.xcarchive/Products/Applications/NingBlogApp.app"
+
+          if [ ! -d "$APP_PATH" ]; then
+            echo "❌ 没有找到 NingBlogApp.app"
+            exit 1
+          fi
+
+          echo "✅ 找到 NingBlogApp.app"
+
+          echo "检查 Bundle Identifier:"
+          /usr/libexec/PlistBuddy \
+            -c "Print :CFBundleIdentifier" \
+            "$APP_PATH/Info.plist"
+
+      - name: Create IPA
         run: |
           set -e
 
           APP_PATH="$RUNNER_TEMP/NingBlogApp.xcarchive/Products/Applications/NingBlogApp.app"
 
-          if [ ! -d "$APP_PATH" ]; then
-            echo "ERROR: NingBlogApp.app was not produced."
-            find "$RUNNER_TEMP/NingBlogApp.xcarchive" -maxdepth 5 -print
-            exit 1
-          fi
-
           mkdir -p "$RUNNER_TEMP/Payload"
-          cp -R "$APP_PATH" "$RUNNER_TEMP/Payload/NingBlogApp.app"
+
+          cp -R \
+            "$APP_PATH" \
+            "$RUNNER_TEMP/Payload/NingBlogApp.app"
 
           cd "$RUNNER_TEMP"
-          zip -qry "宁的博客-未签名.ipa" Payload
 
-      - name: Upload IPA artifact
+          zip -qry \
+            "宁的博客-未签名.ipa" \
+            Payload
+
+          echo "✅ IPA 已生成"
+          ls -lh "宁的博客-未签名.ipa"
+
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
           name: NingBlogApp-unsigned-IPA
