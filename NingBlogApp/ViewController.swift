@@ -19,7 +19,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 final class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 
-    private let websiteURL = URL(string: "https://ning.ningnb.cc.cd")!
+    private let websiteURL = URL(string: "https://liquidvault-7q2m.web.zaka.live")!
     private var webView: WKWebView!
 
     override func viewDidLoad() {
@@ -79,7 +79,7 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         initiatedByFrame frame: WKFrameInfo,
         completionHandler: @escaping () -> Void
     ) {
-        let alert = UIAlertController(title: "宁的博客", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: "鳄鱼网盘", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "确定", style: .default) { _ in
             completionHandler()
         })
